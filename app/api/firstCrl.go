@@ -3,13 +3,17 @@ package api
 import (
 	"bytes"
 	"fmt"
+	"gf-demo/app/dao"
 	"gf-demo/app/service"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gtime"
+	"github.com/gogf/gf/util/grand"
 	"log"
 	"net/url"
+	"sync"
 	"time"
 )
 
@@ -26,6 +30,72 @@ type UserRequest struct {
 	UserInfo *UserInfo `json:"user_info"`
 }
 
+// Index is a demonstration route handler for output "Hello World!".
+func (*firstCrl) Index(r *ghttp.Request) {
+	r.Response.Writeln("aaa")
+
+	service.Jd.Test()
+
+	r.Response.WriteJsonExit(gtime.New(time.Now()))
+
+}
+
+func (*firstCrl) Test2(r *ghttp.Request) {
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		for i := 0; i < 8000; i++ {
+			power := grand.N(50, 188)
+			price := grand.N(2, 500)
+			dao.Item.Ctx(r.Context()).Data(g.Map{"price": price, "power": power}).Insert()
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+	r.Response.WriteJsonExit(1)
+
+}
+
+func (*firstCrl) Test(r *ghttp.Request) {
+
+	ch := make(chan g.Map, 8000) // 成果队列
+
+	var wg sync.WaitGroup
+
+	go func() {
+		wg.Add(1)
+		for i := 0; i < 8000; i++ {
+			power := grand.N(50, 188)
+			price := grand.N(2, 500)
+			ch <- g.Map{"price": price, "power": power}
+		}
+	}()
+
+	go do(ch, r)
+
+	wg.Wait()
+	r.Response.WriteJsonExit("adsfasdfasdfas")
+
+}
+
+func do(ch chan g.Map, r *ghttp.Request) {
+	for v := range ch {
+		g.Model("item").Data(v).Insert()
+	}
+}
+
+// Upload uploads files to ./tmp .
+func (*firstCrl) Upload(r *ghttp.Request) {
+	files := r.GetUploadFiles("file_name")
+	names, err := files.Save("./tmp/")
+	if err != nil {
+		r.Response.WriteExit(err)
+	}
+	r.Response.WriteExit("upload successfully: ", names)
+}
+
 /*
    收集器请求前: onRequest()
    收集器抓取失败:onError()
@@ -34,9 +104,9 @@ type UserRequest struct {
    	收集器收到XML： onXML()
    	收集器抓取完后最后执行的回调：onScraped()
 */
-func (*firstCrl) Test(r *ghttp.Request) {
-	//urlstr := "https://news.baidu.com"
-	urlstr := "https://www.qimao.com/shuku/113609/"
+func (*firstCrl) Pachong(r *ghttp.Request) {
+	urlstr := "https://news.baidu.com"
+	//urlstr := "https://www.qimao.com/shuku/113609/"
 
 	u, err := url.Parse(urlstr)
 	if err != nil {
@@ -52,6 +122,7 @@ func (*firstCrl) Test(r *ghttp.Request) {
 		r.Headers.Set("Host", u.Host)
 		r.Headers.Set("Connection", "keep-alive")
 		r.Headers.Set("Accept", "*/*")
+		r.Headers.Set("Cookie", "aliyungf_tc=fc38c09527d1a5ccc23bf4bfe30cc7a4308edf18c1715ff560f92603ebf897e7; _csrf-frontend=302fee98c95466fa6357d732be0f91c1070dd0556b2ce1772a6c9ec561d1f8f8a:2:{i:0;s:14:\"_csrf-frontend\";i:1;s:32:\"sb5ho6Bsu17g4t9GCJtklCcKL0EXuask\";}; acw_tc=b65cfd5f16388417605658994e1c26d66806e676453ce6f66d309f86657ead; acw_sc__v2=61aebda01a2abca1cb78a246f846e916a3da3989")
 		r.Headers.Set("Origin", u.Host)
 		r.Headers.Set("Referer", urlstr)
 		r.Headers.Set("Accept-Encoding", "gzip, deflate")
@@ -93,24 +164,4 @@ func (*firstCrl) Test(r *ghttp.Request) {
 	err = c.Visit(urlstr)
 
 	fmt.Println(123)
-}
-
-// Index is a demonstration route handler for output "Hello World!".
-func (*firstCrl) Index(r *ghttp.Request) {
-	r.Response.Writeln("aaa")
-
-	service.Jd.Test()
-
-	r.Response.WriteJsonExit(gtime.New(time.Now()))
-
-}
-
-// Upload uploads files to ./tmp .
-func (*firstCrl) Upload(r *ghttp.Request) {
-	files := r.GetUploadFiles("file_name")
-	names, err := files.Save("./tmp/")
-	if err != nil {
-		r.Response.WriteExit(err)
-	}
-	r.Response.WriteExit("upload successfully: ", names)
 }
