@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gf-demo/app/dao"
 	"gf-demo/app/service"
+	"gf-demo/tool"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 	"github.com/gogf/gf/frame/g"
@@ -60,22 +61,11 @@ func (*firstCrl) Test2(r *ghttp.Request) {
 
 func (*firstCrl) Test(r *ghttp.Request) {
 
-	ch := make(chan g.Map, 8000) // 成果队列
+	str := "天气很好"
+	str2 := []byte(str)
 
-	var wg sync.WaitGroup
+	tool.DD(str2[0], string([]byte{229}))
 
-	go func() {
-		wg.Add(1)
-		for i := 0; i < 8000; i++ {
-			power := grand.N(50, 188)
-			price := grand.N(2, 500)
-			ch <- g.Map{"price": price, "power": power}
-		}
-	}()
-
-	go do(ch, r)
-
-	wg.Wait()
 	r.Response.WriteJsonExit("adsfasdfasdfas")
 
 }

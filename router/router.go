@@ -72,6 +72,7 @@ func MiddlewareErrorHandler(r *ghttp.Request) {
 		g.Log("exception").Error(err)
 		//返回固定的友好信息
 		r.Response.ClearBuffer()
+		//r.Response.Writef("%+v", err)
 		r.Response.Writeln("服务器居然开小差了，请稍后再试吧！")
 	}
 }
