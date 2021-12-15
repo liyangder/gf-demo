@@ -3,11 +3,11 @@
 	Address     = ":8199"
 	ServerRoot  = "public"
 	ServerAgent = "gf-app"
-	LogPath     = "./tmp/log/gf-app/server"
+	LogPath     = "./tmp/server"
 
 # Logger.
 [logger]
-    Path        = "./tmp/log/gf-app"
+    Path        = "./tmp/log"
     Level       = "all"
     Stdout      = true
 
@@ -15,7 +15,7 @@
 [viewer]
     Path        = "template"
     DefaultFile = "index.html"
-    Delimiters  =  ["{{", "}}"]
+    Delimiters  =  '["{{", "}}"]'
 
 # Database.
 [database]
@@ -33,3 +33,13 @@
         group  = ""
         prefix = ""
         tables = ""
+    [gfcli.build]
+         name     = "myapp"
+         arch     = "amd64"
+         system   = "linux"
+         mod      = "none"
+         cgo      = 0
+         pack     = "config,public,template"
+         version  = "v1.0.0"
+         output   = "./bin"
+         extra    = ""

@@ -3,8 +3,8 @@ package api
 import (
 	"bytes"
 	"fmt"
+	"gf-demo/app"
 	"gf-demo/app/dao"
-	"gf-demo/app/service"
 	"gf-demo/tool"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
@@ -33,11 +33,14 @@ type UserRequest struct {
 
 // Index is a demonstration route handler for output "Hello World!".
 func (*firstCrl) Index(r *ghttp.Request) {
-	r.Response.Writeln("aaa")
+	var param struct {
+		DeviceNo string `p:"device_no" v:"required#请输入设备号"`
+	}
+	if err := r.Parse(&param); err != nil {
+		app.OutFalse(r, err.Error())
+	}
 
-	service.Jd.Test()
-
-	r.Response.WriteJsonExit(gtime.New(time.Now()))
+	app.OutSuccess(r, gtime.New(time.Now()))
 
 }
 
@@ -55,8 +58,7 @@ func (*firstCrl) Test2(r *ghttp.Request) {
 	}()
 
 	wg.Wait()
-	r.Response.WriteJsonExit(1)
-
+	app.OutSuccess(r, 1)
 }
 
 func (*firstCrl) Test(r *ghttp.Request) {
@@ -66,7 +68,7 @@ func (*firstCrl) Test(r *ghttp.Request) {
 
 	tool.DD(str2[0], string([]byte{229}))
 
-	r.Response.WriteJsonExit("adsfasdfasdfas")
+	app.OutSuccess(r, 1)
 
 }
 
