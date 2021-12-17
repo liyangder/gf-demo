@@ -13,9 +13,9 @@ func init() {
 	s.SetIndexFolder(true)
 	s.SetServerRoot("/public")
 	//s.SetIndexFiles([]string{"index.html","index.htm"})
-	s.SetRewriteMap(g.MapStrStr{
-		"/a": "/a.html",
-	})
+	//s.SetRewriteMap(g.MapStrStr{
+	//	"/a": "/a.html",
+	//})
 
 	//设置域名
 	s.Domain("localhost3")

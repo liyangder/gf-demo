@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"gf-demo/app"
 	"gf-demo/app/dao"
-	"gf-demo/tool"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 	"github.com/gogf/gf/frame/g"
@@ -33,6 +32,7 @@ type UserRequest struct {
 
 // Index is a demonstration route handler for output "Hello World!".
 func (*firstCrl) Index(r *ghttp.Request) {
+
 	var param struct {
 		DeviceNo string `p:"device_no" v:"required#请输入设备号"`
 	}
@@ -63,13 +63,7 @@ func (*firstCrl) Test2(r *ghttp.Request) {
 
 func (*firstCrl) Test(r *ghttp.Request) {
 
-	str := "天气很好"
-	str2 := []byte(str)
-
-	tool.DD(str2[0], string([]byte{229}))
-
-	app.OutSuccess(r, 1)
-
+	app.OutSuccess(r, gtime.Now().Format("Ym"))
 }
 
 func do(ch chan g.Map, r *ghttp.Request) {
