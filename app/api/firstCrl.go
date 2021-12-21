@@ -4,16 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"gf-demo/app"
-	"gf-demo/app/dao"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gtime"
-	"github.com/gogf/gf/util/grand"
 	"log"
 	"net/url"
-	"sync"
 	"time"
 )
 
@@ -44,35 +40,12 @@ func (*firstCrl) Index(r *ghttp.Request) {
 
 }
 
-func (*firstCrl) Test2(r *ghttp.Request) {
-	var wg sync.WaitGroup
-
-	wg.Add(1)
-	go func() {
-		for i := 0; i < 8000; i++ {
-			power := grand.N(50, 188)
-			price := grand.N(2, 500)
-			dao.Item.Ctx(r.Context()).Data(g.Map{"price": price, "power": power}).Insert()
-		}
-		wg.Done()
-	}()
-
-	wg.Wait()
-	app.OutSuccess(r, 1)
-}
-
 func (*firstCrl) Test(r *ghttp.Request) {
-
-	app.OutSuccess(r, gtime.Now().Format("Ym"))
+	app.DD(123)
+	app.OutSuccess(r, 222)
 }
 
-func do(ch chan g.Map, r *ghttp.Request) {
-	for v := range ch {
-		g.Model("item").Data(v).Insert()
-	}
-}
-
-// Upload uploads files to ./tmp .
+//// Upload uploads files to ./tmp .
 func (*firstCrl) Upload(r *ghttp.Request) {
 	files := r.GetUploadFiles("file_name")
 	names, err := files.Save("./tmp/")

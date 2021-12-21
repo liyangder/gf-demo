@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"reflect"
 	"runtime"
@@ -11,22 +12,25 @@ import (
 
 func DD(param ...interface{}) bool {
 	funcName, file, line, ok := runtime.Caller(1)
+	fmt.Println("\n\n\n\n \033[1;31;34m start  \033[0m ", gtime.Now())
+	fmt.Printf("\033[1;31;34m 	file: \033[0m   %s		\033[1;31;34m line: \033[0m  %d  "+runtime.FuncForPC(funcName).Name()+"\n", file, line)
+
 	if ok {
 		if len(param) > 1 {
 			for _, val := range param {
-				fmt.Printf("file: %s	 line: %d  "+runtime.FuncForPC(funcName).Name()+"\n", file, line)
-				fmt.Printf(" 	类型为 :  %T		变量为 :  %+v\n", val, val)
+				fmt.Printf("\033[1;31;34m  	类型为 :\033[0m			%T\n ", val)
+				fmt.Printf("\033[1;31;34m   	变量值为 :\u001B[0m		%+v\n", val)
 				g.Dump(val)
 			}
 		} else {
 			fmt.Println(reflect.TypeOf(param))
-
-			fmt.Printf("file: %s	 line: %d  "+runtime.FuncForPC(funcName).Name()+"\n", file, line)
-			fmt.Printf(" 	类型为 :  %T		变量为 :  %+v\n", param, param)
-			g.Dump(param)
+			fmt.Printf("\033[1;31;34m类型为 :\033[0m%T\n ", param)
+			fmt.Printf("\033[1;31;34m  	变量值为 : \033[0m  %+v\n", param)
 		}
 
 	}
+	fmt.Println("_____________end_________________", gtime.Now())
+
 	return true
 }
 

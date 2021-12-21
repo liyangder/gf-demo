@@ -27,6 +27,7 @@ func init() {
 		group.Middleware(MiddlewareCORS)
 
 		group.ALL("/firstcrl", api.FirstCrl)
+		group.ALL("/fancrl", api.FanCrl)
 		group.ALL("/chat", api.Chat)
 	})
 
