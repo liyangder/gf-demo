@@ -19,7 +19,7 @@ type fanCrl struct {
 func (*fanCrl) Test(r *ghttp.Request) {
 	ch := make(chan int, 0)
 	go func() {
-		for i := 1; i < 10; i++ {
+		for i := 1; i < 10000; i++ {
 			ch <- i
 		}
 		defer close(ch)
@@ -34,7 +34,6 @@ func (*fanCrl) Test(r *ghttp.Request) {
 	for {
 		select {
 		case temp, ok := <-c1:
-			app.DD(ok)
 			if !ok {
 				fmt.Println(111)
 				c1 = nil
@@ -62,10 +61,12 @@ func (*fanCrl) Test(r *ghttp.Request) {
 		}
 		if c1 == nil && c2 == nil && c3 == nil {
 			//if c1 == nil {
-			app.DD(a)
+			//app.DD(a)
 			break
 		}
 	}
+
+	app.DD(len(a))
 
 	app.OutSuccess(r, a)
 	//app.OutSuccess(r, gtime.Now().Format("Ym"))
@@ -75,7 +76,6 @@ func change(arr chan int) chan int {
 	out := make(chan int)
 	go func() {
 		defer func() {
-			app.DD(out)
 			close(out)
 		}()
 		for value := range arr {
