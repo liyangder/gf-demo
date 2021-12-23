@@ -26,7 +26,14 @@ func init() {
 	s.Group("/api", func(group *ghttp.RouterGroup) {
 		group.Middleware(MiddlewareCORS)
 
-		group.ALL("/firstcrl", api.FirstCrl)
+		//group.ALL("/firstcrl", api.FirstCrl)
+		//group.ALL("/firstcrl/test", (&api.FirstCrl{}).Test) // 需要绑定 方法..
+
+		group.ALLMap(g.Map{
+			"firstcrl/test":  api.FirstCrl.Test,
+			"firstcrl/index": api.FirstCrl.Index,
+		})
+
 		group.ALL("/fancrl", api.FanCrl)
 		group.ALL("/chat", api.Chat)
 	})

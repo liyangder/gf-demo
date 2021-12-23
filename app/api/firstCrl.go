@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"gf-demo/app"
+	"gf-demo/app/common"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 	"github.com/gogf/gf/net/ghttp"
@@ -15,7 +16,9 @@ import (
 
 var FirstCrl = firstCrl{}
 
-type firstCrl struct{}
+type firstCrl struct {
+	common.BaseCrl
+}
 
 type UserInfo struct {
 	UserName string `json:"user_name"`
@@ -27,22 +30,41 @@ type UserRequest struct {
 }
 
 // Index is a demonstration route handler for output "Hello World!".
-func (*firstCrl) Index(r *ghttp.Request) {
+func (c *firstCrl) Index(r *ghttp.Request) {
 
 	var param struct {
 		DeviceNo string `p:"device_no" v:"required#请输入设备号"`
 	}
-	if err := r.Parse(&param); err != nil {
-		app.OutFalse(r, err.Error())
-	}
+	//if err := r.Parse(&param); err != nil {
+	//	app.OutFalse(r, err.Error())
+	//}
+	c.CheckParam(r, &param)
 
 	app.OutSuccess(r, gtime.New(time.Now()))
 
 }
 
-func (*firstCrl) Test(r *ghttp.Request) {
-	app.DD(123)
-	app.OutSuccess(r, 222)
+type cat struct {
+	life
+	Name string
+	Age  uint
+}
+type life struct {
+	Coloer string
+	Sport  string
+}
+
+func (c *firstCrl) Test(r *ghttp.Request) {
+
+	l := cat{life{"red", "跳舞"}, "张", 1231}
+
+	l.Coloer = "blue"
+
+	time.After(6 * time.Second)
+	c.GetName()
+	app.DD(12312, c.Name)
+
+	app.OutSuccess(r, l)
 }
 
 //// Upload uploads files to ./tmp .
