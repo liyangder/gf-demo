@@ -6,26 +6,25 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
-	"reflect"
 	"runtime"
 )
 
 func DD(param ...interface{}) bool {
 	funcName, file, line, ok := runtime.Caller(1)
-	fmt.Println("\n\n\n\n \033[1;31;34m start  \033[0m ", gtime.Now())
-	fmt.Printf("\033[1;31;34m 	file: \033[0m   %s		\033[1;31;34m line: \033[0m  %d  "+runtime.FuncForPC(funcName).Name()+"\n", file, line)
+	fmt.Println("\n\n\n\n \033[1;31;33m start  \033[0m ", gtime.Now())
+	fmt.Printf("\033[1;31;32m 	file: \033[0m   %s		\033[1;31;34m line: \033[0m  %d  "+runtime.FuncForPC(funcName).Name()+"\n", file, line)
 
 	if ok {
 		if len(param) > 1 {
 			for _, val := range param {
-				fmt.Printf("\033[1;31;34m  	类型为 :\033[0m			%T\n ", val)
-				fmt.Printf("\033[1;31;34m   	变量值为 :\u001B[0m		%+v\n", val)
+				fmt.Printf("\033[1;31;32m类型为 :\033[0m%T\n ", val)
+				fmt.Printf("\033[1;31;32m 变量值为 : \033[0m  %+#v\n", val)
 				g.Dump(val)
 			}
 		} else {
-			fmt.Println(reflect.TypeOf(param))
-			fmt.Printf("\033[1;31;34m类型为 :\033[0m%T\n ", param)
-			fmt.Printf("\033[1;31;34m  	变量值为 : \033[0m  %+v\n", param)
+			//fmt.Println(reflect.TypeOf(param[0]))
+			fmt.Printf("\033[1;31;32m类型为 :\033[0m%T\n ", param[0])
+			fmt.Printf("\033[1;31;32m 变量值为 : \033[0m  %+#v\n", param[0])
 		}
 
 	}
@@ -34,7 +33,10 @@ func DD(param ...interface{}) bool {
 	return true
 }
 
-func OutSuccess(r *ghttp.Request, data interface{}) {
+func OutSuccess(r *ghttp.Request, data ...interface{}) {
+	if len(data) == 0 {
+		data = []interface{}{}
+	}
 	err := r.Response.WriteJsonExit(g.Map{
 		"code":    0,
 		"message": "success",

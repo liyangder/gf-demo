@@ -40,6 +40,6 @@
          mod      = "none"
          cgo      = 0
          pack     = "config,public,template"
-         version  = "v1.0.0"
+#          version  = "v1.0.0"
          output   = "./bin"
          extra    = ""

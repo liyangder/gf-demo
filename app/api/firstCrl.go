@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	"log"
 	"net/url"
+	"runtime"
 	"time"
 )
 
@@ -54,17 +55,25 @@ type life struct {
 	Sport  string
 }
 
+func aa(arr *map[string]int) {
+
+	(*arr)["asd"] = 12312
+
+	app.DD(arr, *arr)
+
+}
+
+func cha(arr []int) {
+
+	arr = append(arr, 250)
+
+}
+
 func (c *firstCrl) Test(r *ghttp.Request) {
 
-	l := cat{life{"red", "跳舞"}, "张", 1231}
+	app.DD(runtime.GOOS)
 
-	l.Coloer = "blue"
-
-	time.After(6 * time.Second)
-	c.GetName()
-	app.DD(12312, c.Name)
-
-	app.OutSuccess(r, l)
+	app.OutSuccess(r)
 }
 
 //// Upload uploads files to ./tmp .
